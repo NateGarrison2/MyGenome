@@ -19,3 +19,5 @@ example code
   </summary>
   Hidden content
 </details>
+
+![filename.png](/data/filename.png)
