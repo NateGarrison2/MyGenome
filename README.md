@@ -17,6 +17,6 @@ Repo for ABT480 to document genome sequencing.
 
 7. Genome Interrogation using BLAST
 
-8. Perform Gene Predictions
+8. [Perform Gene Predictions](https://github.com/NateGarrison2/MyGenome-Sg341/blob/a7d520393e73385811a2bba815d55b1460abeeaf/GenePredictions.md)
 
 9. Visualize Genes in Genome Browser
