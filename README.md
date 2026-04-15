@@ -46,7 +46,13 @@ Now that we have a good overview of our sequence quality and any issues within o
 ```
 java -jar trimmomatic-0.38.jar PE -threads 2 -phred33 -trimlog Sg341_errorlog.txt Sg341_1.fastq Sg341_2.fastq Sg341_1_paired.fastq Sg341_1_unpaired.fastq Sg341_2_paired.fastq Sg341_2_unpaired.fastq CROP:280 SLIDINGWINDOW:20:20 MINLEN:150
 ```
-2. Run paired and unpaired sequences through FASTQC to assess the quality of trimming 
+2. Run paired and unpaired sequences through FASTQC to assess the quality of trimming
+```
+fastqc Sg341_1_unpaired.fastq
+fastqc Sg341_1_paired.fastq
+fastqc Sg341_2_unpaired.fastq
+fastqc Sg341_2_paired.fastq
+```
 <details><summary>Paired reads</summary>
 My Sg341_1_paired.fastq contains warning levels for:
 - Per sequence GC content
@@ -97,6 +103,8 @@ Trimmomatic did a great job of removing poor quality sequence in just about ever
 ```sbatch velvetoptimiser.sh Sg341 57 137 10```
 4. Run VelvetOptimiser again in steps of 2 (range of -8 to +8) to find the most optimal k-mer value based on results: 
 ```sbatch velvetoptimiser.sh Sg341 89 105 2```
+5. Run Velvet on paired reads using optimal k-mer value:
+`velveth 99 -shortPaired -fastq -separate Sg341_1_paired.fq Sg341_2_paired.fq`
 
 ### Results from log file of 2-step VelvetOptimiser:
 - Optimal k-mer value: 99
