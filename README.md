@@ -143,6 +143,7 @@ In the end, we get a finalized genome assembly named Sg341_final.fasta
 BUSCO (Benchmarking Using Single-Copy Orthologs) is a tool used to assess genome completeness by using BLAST to search for a set of single-copy genes which have "orthologs" in genomes of related species.
 We run BUSCO on our fully optimized, fully cleaned genome assembly (`Sg341_final.fasta`) by running: ```sbatch BuscoSingularity.sh Sg341_final.fasta```
 This outputs a `Sg341_final_busco` directory with a `short_summary` file inside with results.
+My short_summary results show a high level of completeness (C) at 98.3%, with a low level of missing orthologs (M) at 1.5%: <img width="1230" height="729" alt="image" src="https://github.com/user-attachments/assets/77e672b7-1f20-4576-a680-5f0d44ab1bc1" />
 ## Genome Interrogation using BLAST
 We need to determine which contigs in the final assembly correspond to the mitochondrial genome in preparation to submit to NCBI.
 1. BLAST the `MoMitochondrion.fasta` sequence against the final genome assembly:
@@ -152,6 +153,7 @@ We need to determine which contigs in the final assembly correspond to the mitoc
 3. Export the blast results that did not pass the above filter into a separate .txt file:
 ```awk '$4/$3 < 0.9' MoMitochondrion.Sg341.BLAST > Sg341_short_mitochondrial_hits.txt```
 4. Manually interrogate the `Sg341_short_mitochondrial_hits.txt` file to look for blast alignments that got split in half that combined would cross the 90% threshold, and add those contigs to the bottom of the `Sg341_mitochondrion.csv` file.
+My Sg341_mitochondrion.csv file can be found [here](https://github.com/NateGarrison2/MyGenome-Sg341/blob/31de2273d47acd72f4ec74a4c3ff31deae458002/data/Sg341_mitochondrion.csv)
 ## Perform Gene Predictions
 SNAP is a program which searches for regions of a genome which are likely to be genes. SNAP uses properties of the DNA sequence to infer features such as start codons, splice junctions, and untranslated regions. We want to train SNAP on a reference genome of a related strain, B71.
 
