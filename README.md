@@ -176,11 +176,19 @@ SNAP is a program which searches for regions of a genome which are likely to be 
   1. Run SNAP using the name of the parameter file and the final fasta file, and direct to a .zff file: `snap-hmm Moryzae.hmm Sg341_final.fasta > Sg341-snap.zff`
   2. Compute stats from ZFF and fasta files: `fathom Sg341-snap.zff Sg341_final.fasta -gene-stats`
   3. Generate a GFF2 file to work with most other programs: `snap-hmm Moryzae.hmm Sg341_final.fasta -gff > Sg341-snap.gff2`
+  4. Simply rename Sg341-snap.gff2 to Sg341-snap.gff3 to make it compatible to run in IGV: `mv Sg341-snap.gff2 Sg341-snap.gff3`
+
+Screenshot of SNAP in IGV:
+<img width="1919" height="349" alt="image" src="https://github.com/user-attachments/assets/88889a77-2db3-42ff-8efd-fcc35e4dc9f7" />
+
 
 ### Running AUGUSTUS
   AUGUSTUS is a tool to find and predict genes. It already contains an organism closely related to ours (Magnaporthe grisea) so we won't have to retrain AUGUSTUS. To run AUGUSTUS, we specify a species to use as a parameter file:
   ```augustus --species=magnaporthe_grisea --gff3=on --singlestrand=true --progress=true Sg341_final.fasta > Sg341-augustus.gff3```
 This outputs a .gff3 file.
+
+Screenshot of AUGUSTUS in IGV:
+<img width="1919" height="442" alt="image" src="https://github.com/user-attachments/assets/4996287a-c60b-41c4-a8c4-00f5556fae22" />
 
 ### Running MAKER
 1. Create a MAKER configuration file: `singularity exec /share/singularity/images/ccs/MAKER/amd-maker-debian10.sinf maker -CTL` This generates three files, maker_exe.ctl lists locations of programs MAKER uses, maker_bopts.ctl sets thresholds for accepting alignments of EST and protein evidence, and maker_opts.ctl describes the data to be used as input to MAKER, steps to perform, and options for those steps.
@@ -195,4 +203,17 @@ This outputs a .gff3 file.
 3. Run maker.sh: `sbatch maker.sh Sg341_final.fasta`
 4. Merge everything together into one GFF file: `singularity exec /share/singularity/images/ccs/MAKER/amd-maker-debian10.sinf gff3_merge -d Sg341_final.maker.output/Sg341_final_master_datastore_index.log -o Sg341-maker.gff3`
 This outputs a .gff3 file.
-## Visualize Genes in Genome Browser
+5. Run the following command to generate a proteins.fasta file: `singularity exec /share/singularity/images/ccs/MAKER/amd-maker-debian10.sinf fasta_merge -d Sg341_final.maker.output/Sg341_final_master_datastore_index.log -o Sg341`
+Screenshot of MAKER in IGV:
+<img width="1919" height="1083" alt="image" src="https://github.com/user-attachments/assets/108ad1e8-05d3-460c-8291-443cb5c590dc" />
+
+| File | Command Used | # Genes Predicted |
+| ---- | ------------ | ----------------- |
+| Sg341-maker.gff3 | awk '$3 == "gene"' Sg341-maker.gff3 | wc -l | 12,973 | 
+| Sg341.all.maker.proteins.fasta | grep -c "^>" Sg341.all.maker.proteins.fasta | 12,973 |
+
+Example of a gene which was successfully predicted by SNAP, AUGUSTUS, and MAKER: 
+<img width="1919" height="659" alt="image" src="https://github.com/user-attachments/assets/0300d08f-eae0-4e14-9a2e-282be7bd235a" />
+
+## BLASTing My Genome
+
