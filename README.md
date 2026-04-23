@@ -209,8 +209,24 @@ Screenshot of MAKER in IGV:
 
 | File | Command Used | # Genes Predicted |
 | ---- | ------------ | ----------------- |
-| Sg341-maker.gff3 | awk '$3 == "gene"' Sg341-maker.gff3 | wc -l | 12,973 | 
+| Sg341-snap.gff2 | grep -c "Exon" Sg341-snap.gff2 | 7,419 |
+| Sg341-augustus.gff3 | grep -c "# start gene" Sg341-augustus.gff3 | 17,503 |
+| Sg341-maker.gff3 | awk '$3 == "gene"' Sg341-maker.gff3 \| wc -l | 12,973 | 
 | Sg341.all.maker.proteins.fasta | grep -c "^>" Sg341.all.maker.proteins.fasta | 12,973 |
+
+We can see that SNAP, AUGUSTUS, and MAKER all resulted in vastly different numbers of genes predicted, but we were able to verify that both the MAKER's .gff3 and proteins.fasta files still counted the same number of genes.
+
+Only SNAP:
+<img width="1721" height="476" alt="image" src="https://github.com/user-attachments/assets/e5642c02-dda3-4ff5-8215-cf3db7adc17c" />
+
+Only AUGUSTUS:
+<img width="1729" height="459" alt="image" src="https://github.com/user-attachments/assets/a99adc5a-3da9-421a-870b-d9cca57ea63e" />
+
+Only MAKER:
+<img width="1736" height="570" alt="image" src="https://github.com/user-attachments/assets/3cf4c8e8-37b5-453a-a5bd-02dbc4980802" />
+
+Only SNAP and AUGUSTUS:
+<img width="1743" height="560" alt="image" src="https://github.com/user-attachments/assets/6d011b11-737d-40d3-9d46-33d13af8652c" />
 
 Example of a gene which was successfully predicted by SNAP, AUGUSTUS, and MAKER: 
 <img width="1919" height="659" alt="image" src="https://github.com/user-attachments/assets/0300d08f-eae0-4e14-9a2e-282be7bd235a" />
