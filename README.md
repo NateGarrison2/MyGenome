@@ -225,11 +225,36 @@ Only AUGUSTUS:
 Only MAKER:
 <img width="1736" height="570" alt="image" src="https://github.com/user-attachments/assets/3cf4c8e8-37b5-453a-a5bd-02dbc4980802" />
 
-Only SNAP and AUGUSTUS:
+SNAP and AUGUSTUS predicting the same exon/intron structure:
 <img width="1743" height="560" alt="image" src="https://github.com/user-attachments/assets/6d011b11-737d-40d3-9d46-33d13af8652c" />
+
+SNAP and AUGUSTUS predicting a different exon/intron structure:
+<img width="1919" height="344" alt="image" src="https://github.com/user-attachments/assets/d7b5f507-d4e5-4830-bcdd-964db416db29" />
 
 Example of a gene which was successfully predicted by SNAP, AUGUSTUS, and MAKER: 
 <img width="1919" height="659" alt="image" src="https://github.com/user-attachments/assets/0300d08f-eae0-4e14-9a2e-282be7bd235a" />
 
 ## BLASTing My Genome
+Using a program called BLAST, we can identify genetic differences between our Sg341 genome assembly and a reference B71 genome.
 
+Perform a BLAST search using the B71 genome as a query and Sg341 as the subject:
+
+```blastn -query B71.fasta -subject Sg341_final.fasta -evalue 1e-100 -outfmt 7 > B71.Sg341.BLAST```
+
+We will use this file to load into IGV later, but to answer some specific questions, it is easier to also BLAST search using the Sg341 genome as a query and the B71 genome as the subject:
+
+```blastn -query Sg341_final.fasta -subject B71.fasta -evalue 1e-100 -outfmt 7 > Sg341.B71.BLAST```
+
+We can check to see if there are any contigs in our Sg341 assembly that have no corresponding matches in the B71 reference genome: `grep "# 0 hits found" Sg341.B71.BLAST | wc -l`
+
+This results in a count of 496 contigs with no corresponding matches in the B71 reference genome.
+
+We can then create a list of Sg341 contigs that lack matches in the B71 reference using the following command: `grep "# 0 hits found" -B 2 Sg341.B71.BLAST | awk '$3 ~ "Sg341_contig"' | awk '{print $3}'` 
+
+This returns a substantially long list.
+
+Next, we can convert the BLAST output of the first B71.Sg341.BLAST file we created into a gff3 format to be able to run in IGV. This requires very specific formatting done in the command line:
+
+```grep -v '^#' B71.Sg341.BLAST | awk -F'\t' 'BEGIN{OFS="\t"; print "##gff-version 3"} {print $2, "awk", "blast", $9, $10, $12, ($9 < $10 ? "+" : "-"), ".", "ID=" $1 }' > B71.Sg341.gff3```
+
+This reads each contig from the .BLAST file (starts with #), then feeds the output into awk, identifying it as a tab deliminated file starting with '##gff3-version 3'. Then, each line is formatted in accordance to the [GFF3 file format.](https://useast.ensembl.org/info/website/upload/gff3.html?)
